@@ -10,7 +10,7 @@ def displayImage(image):
     plt.imshow(image)
     plt.show()
 
-with open('color.csv') as csvfile:
+with open('output_image_rgb.csv') as csvfile:
     image = []
     reader = csv.reader(csvfile)
     reader_list = list(reader)
@@ -27,7 +27,6 @@ with open('color.csv') as csvfile:
         ci += 1
     #image.append(row_array)
     # image = np.array(image)
-    print(image)
     imageArr = np.uint8(image)
     displayImage(imageArr)
 
