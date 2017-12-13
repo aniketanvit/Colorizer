@@ -1,6 +1,7 @@
 import csv
 import math
 import sys
+import numpy as np
 
 class ClusteringEngine:
 
@@ -41,7 +42,7 @@ class ClusteringEngine:
         try:
             mindiff = sys.maxsize
             with open(inputFileName, "r") as inputImage:
-                with open(self.outputFileName.split(".")[0] + "_reduced.csv", "a+") as reducedOutputFile:
+                with open(inputFileName.split(".")[0] + "_reduced.csv", "w") as reducedOutputFile:
                     input_csv = csv.reader(inputImage,  delimiter=',')
                     output_csv = csv.reader (reducedOutputFile, delimiter=',')
 
@@ -49,7 +50,6 @@ class ClusteringEngine:
                         ic = [int(color[0]), int(color[1]), int(color[2])]
                         xx = self.getNearestColor(ic)
                         xy = str(xx[0]) + "," + str(xx[1]) + "," + str(xx[2]) + "\n"
-                        print(xy)
                         reducedOutputFile.write(xy)
         except Exception as e:
             pass
@@ -74,8 +74,54 @@ class ClusteringEngine:
             converted_rgb.append (tuple (int (h[i:i + 2], 16) for i in (0, 2, 4)))
         return converted_rgb
 
-    def clusterInputSpace(self):
-        pass
+    def clusterInputSpace_training(self, inputFileName):
+        try:
+            with open(inputFileName, "r") as inputImage:
+                with open(inputFileName.split(".")[0] + "_reduced.csv", "w") as reducedOutputFile:
+                    input_csv = csv.reader(inputImage,  delimiter=',')
+                    output_csv = csv.writer(reducedOutputFile, delimiter=',')
+
+                    for line in input_csv:
+                        print(line)
+                        old_val = [v for v in line]
+
+                        old_val[4] = self.getReducedGrayscale(int(line[4]))
+                        output_csv.writerow(old_val)
+                        print(line)
+        except Exception as e:
+            pass
+
+    def clusterInputSpace(self, inputFileName):
+        try:
+            with open(inputFileName, "r") as inputImage:
+                with open(inputFileName.split(".")[0] + "_reduced.csv", "w") as reducedOutputFile:
+                    input_csv = csv.reader(inputImage,  delimiter=',')
+                    output_csv = csv.writer(reducedOutputFile, delimiter=',')
+
+                    for line in input_csv:
+                        print(line)
+                        old_val = [float(v) for v in line]
+
+                        old_val[0] = self.getReducedGrayscale(int(old_val[0]))
+                        output_csv.writerow(old_val)
+                        print(line)
+        except Exception as e:
+            pass
+
+    def getReducedGrayscale(self, _val):
+
+        val = int(_val)
+        clusterRange = 10
+        assert (val >= 0)
+        assert (val <= 255)
+
+        for i in range(0, 11):
+            l = val - i
+            r = val + i
+            if((l % clusterRange) == 0):
+                return l
+            elif((r % clusterRange) == 0):
+                return r
 
     def normDiff(self, vec1, vec2):
         n1 = len(vec1)
@@ -88,9 +134,19 @@ class ClusteringEngine:
 
         return diff
 
+    def CreateInputClusterFile(self):
+        with open("grayscale_categories.csv", "w+") as grayscale:
+            output_csv = csv.writer(grayscale, delimiter=',')
+            for i in range(0, 260, 5):
+                output_csv.writerow([i])
+                print(i)
+
+
+
 if __name__ =='__main__':
     ce = ClusteringEngine()
     #ce.convertHexFileToRGB()
     #ce.loadOutputClusterHeads()
     #ce.getNearestColor([2,2,3])
-    ce.clusterOutputSpace("color.csv")
+    ce.clusterInputSpace("output_image_grayscale.csv")
+    #ce.clusterOutputSpace("color.csv")
