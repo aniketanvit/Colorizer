@@ -53,11 +53,21 @@ window.onload = function() {
 
           var htmlObj = $(reader.result);
           console.log(htmlObject);
-          var rows = htmlObject.querySelector(".wikitable").querySelector("tbody").querySelectorAll("tr");
-          var list = [];
+          // var rows = htmlObject.querySelector(".wikitable").querySelector("tbody").querySelectorAll("tr");
+          // var list = [];
+          // for (i = 0; i < rows.length; i++) {
+          //   var val = rows[i].querySelector("td");
+          //   list.push(val.innerText)
+          // }
+          // var htmlObj = htmlObject.querySelector(".w3-table-all");
+          // console.log(htmlObj);
+          var rows = htmlObject.querySelector(".w3-table-all").getElementsByTagName("tr");
+          console.log(rows);
+          var list = []
           for (i = 0; i < rows.length; i++) {
-            var val = rows[i].querySelector("td");
-            list.push(val.innerText)
+              if (rows[i].getElementsByTagName("td")[1]) {
+          		list.push(rows[i].getElementsByTagName("td")[1].getElementsByTagName("a")[0].innerText);
+          	}
           }
           fileDisplayArea.innerText = list;
           download('test.txt', list);
