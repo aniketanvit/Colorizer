@@ -74,6 +74,21 @@ class ClusteringEngine:
             converted_rgb.append (tuple (int (h[i:i + 2], 16) for i in (0, 2, 4)))
         return converted_rgb
 
+    def clusterInputSpace(self, inputFileName):
+        try:
+            with open(inputFileName, "r") as inputImage:
+                with open(inputFileName.split(".")[0] + "_reduced.csv", "w") as reducedOutputFile:
+                    input_csv = csv.reader(inputImage,  delimiter=',')
+                    output_csv = csv.writer(reducedOutputFile, delimiter=',')
+                    values = []
+                    for line in inputImage:
+                        v = line.rstrip("\n")
+                        val = int(float(v))
+                        rv = self.getReducedGrayscale(val)
+                        output_csv.writerow([rv])
+        except Exception as e:
+            pass
+
     def clusterInputSpace_training(self, inputFileName):
         try:
             with open(inputFileName, "r") as inputImage:
@@ -83,28 +98,10 @@ class ClusteringEngine:
 
                     for line in input_csv:
                         print(line)
-                        old_val = [v for v in line]
-
-                        old_val[4] = self.getReducedGrayscale(int(line[4]))
+                        old_val = []
+                        for v in line:
+                            old_val.append(int(self.getReducedGrayscale(v)))
                         output_csv.writerow(old_val)
-                        print(line)
-        except Exception as e:
-            pass
-
-    def clusterInputSpace(self, inputFileName):
-        try:
-            with open(inputFileName, "r") as inputImage:
-                with open(inputFileName.split(".")[0] + "_reduced.csv", "w") as reducedOutputFile:
-                    input_csv = csv.reader(inputImage,  delimiter=',')
-                    output_csv = csv.writer(reducedOutputFile, delimiter=',')
-
-                    for line in input_csv:
-                        print(line)
-                        old_val = [float(v) for v in line]
-
-                        old_val[0] = self.getReducedGrayscale(int(old_val[0]))
-                        output_csv.writerow(old_val)
-                        print(line)
         except Exception as e:
             pass
 
@@ -140,8 +137,6 @@ class ClusteringEngine:
             for i in range(0, 260, 5):
                 output_csv.writerow([i])
                 print(i)
-
-
 
 if __name__ =='__main__':
     ce = ClusteringEngine()

@@ -10,13 +10,15 @@ def displayImage(image):
     plt.imshow(image)
     plt.show()
 
-def readColorImage(fileName):
+#281
+#174
+def readColorImage(fileName, row_count = 0):
     with open(fileName, "r") as csvfile:
         image = []
         reader = csv.reader(csvfile)
         reader_list = list(reader)
-        row_count = sp.floor(sp.sqrt(len(reader_list)))
-        print(row_count)
+        if(row_count == 0):
+            row_count =  sp.floor(sp.sqrt(len(reader_list)))
         ci = 0
         row_array = []
         for row in reader_list:
@@ -33,12 +35,13 @@ def readColorImage(fileName):
         print(COLS)
         displayImage(imageArr)
 
-def readGrayscaleImage(fileName):
+def readGrayscaleImage(fileName, row_count = 0):
     with open(fileName, "r") as csvfile:
         image = []
         reader = csv.reader(csvfile)
         reader_list = list(reader)
-        row_count = sp.floor(sp.sqrt(len(reader_list)))
+        if(row_count == 0):
+            row_count =  sp.floor(sp.sqrt(len(reader_list)))
         ci = 0
         row_array = []
         for row in reader_list:
@@ -51,12 +54,13 @@ def readGrayscaleImage(fileName):
         imageArr = np.uint8(image)
         displayImage(imageArr)
 
-def createModelInputFile(fileName):
+def createModelInputFile(fileName, row_count=0):
     with open(fileName, "r") as csvfile:
         image = []
         reader = csv.reader(csvfile)
         reader_list = list(reader)
-        row_count = sp.floor(sp.sqrt(len(reader_list)))
+        if row_count == 0:
+            row_count = sp.floor(sp.sqrt(len(reader_list)))
         ci = 0
         row_array = []
         for row in reader_list:
@@ -100,7 +104,8 @@ def createModelInputFile(fileName):
                 op_csv.writerow(g_row)
 
 if __name__ == '__main__':
-    readColorImage("output_image_rgb_reduced.csv")
+    #readColorImage("output_image_rgb_reduced.csv")
+    #readGrayscaleImage ("output_image_grayscale_reduced.csv")
     #for row in reader:
     #    print(row)
     # print(row[0], row[1], row[2])
@@ -109,3 +114,4 @@ if __name__ == '__main__':
 # imageArr = np.uint8([[[255,0,0],[0,255,0],[0,0,255]],[[0,0,255],[255,0,0],[255,0,0]],[[0,0,255],[255,0,0],[0,255,0]]])
 # print(imageArr)
 # displayImage(imageArr)
+    createModelInputFile("output_image_grayscale_reduced.csv", 400)
